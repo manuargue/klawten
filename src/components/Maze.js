@@ -24,8 +24,12 @@ class TileObject {
         this.connections = 0;
     }
 
-    isConnected() {
-        return this.type === TileTypes.SERVER || this.connections === 0;
+    get isConnected() {
+        return this.type === TileTypes.SERVER || this._isConnected;
+    }
+
+    set isConnected(value) {
+        this._isConnected = value;
     }
 
     /** return the number of connections for all of the 4 directions */
@@ -99,13 +103,14 @@ class Maze extends React.Component {
 
         this.generateTiles = this.generateTiles.bind(this);
         this.generateNetwork = this.generateNetwork.bind(this);
+        this.updateConnectionStates = this.updateConnectionStates.bind(this);
 
         this.generateTiles();
         this.generateNetwork();
     }
 
     componentDidMount() {
-
+        this.updateConnectionStates();
     }
 
     /** generates empty grid */
@@ -168,11 +173,53 @@ class Maze extends React.Component {
         this.state.rootTile = rootTile;
     }
 
+    updateConnectionStates() {
+        let tiles = [...this.state.tiles];
+        let rootTile = tiles.find(tile => {
+            return tile.type === TileTypes.SERVER;
+        });
+
+        let visitedTiles = new Set();
+        let toVisitTiles = new Set();
+
+        tiles.forEach(tile => { tile.isConnected = false });
+        toVisitTiles.add(rootTile);
+
+        // helper function
+        let popFromSet = (set) => {
+            let value;
+            for (value of set);
+            set.delete(value);
+            return value;
+        };
+
+        let activeTile = null;
+        while (toVisitTiles.size > 0) {
+            activeTile = popFromSet(toVisitTiles);
+            activeTile.isConnected = true;
+            for (let direction of Directions) {
+                if (!(activeTile.connections & direction))
+                    continue;
+                let neighbor = activeTile.neighborAt(direction, tiles);
+                if (neighbor && (neighbor.connections & TileObject.getOpposite(direction))) {
+                    if (!visitedTiles.has(neighbor)) {
+                        toVisitTiles.add(neighbor);
+                    }
+                    visitedTiles.add(activeTile);
+                }
+            }
+        }
+        this.setState({
+            tiles: tiles,
+            rootTile: rootTile
+        });
+    }
+
     render() {
         const tilesItems = this.state.tiles.map((tile) => {
             return (
                 <Tile
-                    col={tile.col} row={tile.row} type={tile.type} connections={tile.connections}
+                    col={tile.col} row={tile.row} type={tile.type} connections={tile.connections} isConnected={tile.isConnected}
                     key={tile.row.toString() + '-' + tile.col.toString()}
                 />
             )

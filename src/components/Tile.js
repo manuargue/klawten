@@ -12,7 +12,7 @@ class Tile extends React.Component {
     }
 
     render() {
-        const { type, connections } = this.props;
+        const { type, connections, isConnected } = this.props;
         let typeClass, element;
 
         if (type === TileTypes.TERMINAL) {
@@ -63,6 +63,9 @@ class Tile extends React.Component {
                     </React.Fragment>
                 );
             }
+        }
+        if (isConnected) {
+            typeClass += ' active';
         }
 
         return (
