@@ -69,7 +69,7 @@ class Tile extends React.Component {
         }
 
         return (
-            <div className="grid-item">
+            <div className="grid-item" onClick={this.props.onClick} onContextMenu={this.props.onContextMenu}>
                 <svg width="50" height="50" className={typeClass}>
                     {element}
                 </svg>

@@ -85,7 +85,22 @@ class TileObject {
         if (this.type !== TileTypes.SERVER && Directions.includes(this.connections)) {
             this.type = TileTypes.TERMINAL;
         }
-        // this._correctConnections = this.connections;
+    }
+
+    rotateCW() {
+        console.log('cw');
+        let newConnections = this.connections << 1;
+        if (newConnections > 15)
+            newConnections -= 15;
+        this.connections = newConnections;
+    }
+
+    rotateCCW() {
+        console.log('ccw');
+        let newConnections = this.connections >> 1;
+        if (this.connections & UP)
+            newConnections += LEFT;
+        this.connections = newConnections;
     }
 }
 
@@ -98,18 +113,22 @@ class Maze extends React.Component {
             rows: 10,
             cols: 10,
             tiles: [],
-            rootTile: null
+            rootTile: null,
+            isSolved: false
         };
 
         this.generateTiles = this.generateTiles.bind(this);
         this.generateNetwork = this.generateNetwork.bind(this);
         this.updateConnectionStates = this.updateConnectionStates.bind(this);
+        this.randomizeTree = this.randomizeTree.bind(this);
+        this.handleClick = this.handleClick.bind(this);
 
         this.generateTiles();
         this.generateNetwork();
     }
 
     componentDidMount() {
+        this.randomizeTree();
         this.updateConnectionStates();
     }
 
@@ -209,16 +228,39 @@ class Maze extends React.Component {
                 }
             }
         }
+
         this.setState({
             tiles: tiles,
-            rootTile: rootTile
+            rootTile: rootTile,
+            isSolved: visitedTiles.size === tiles.length
         });
+    }
+
+    randomizeTree() {
+        let tiles = [...this.state.tiles];
+        tiles.forEach((tile) => {
+            // let turnFunctions = [tile.rotateCW, tile.rotateCCW];
+            // let movement = turnFunctions[Math.floor(Math.random() * turnFunctions.length)]();
+            // movement();
+            // TODO: fix
+            tile.rotateCW();
+        });
+        this.setState({ tiles: tiles });
+    }
+
+    handleClick(e, tile, direction) {
+        e.preventDefault();
+
+        let tiles = [...this.state.tiles];
+        direction === 'cw' ? tile.rotateCW() : tile.rotateCCW();
+        this.setState({ tiles: tiles });
+        this.updateConnectionStates();
     }
 
     render() {
         const tilesItems = this.state.tiles.map((tile) => {
             return (
-                <Tile
+                <Tile onClick={(e) => {this.handleClick(e, tile, 'cw');}} onContextMenu={(e) => {this.handleClick(e, tile, 'ccw');}}
                     col={tile.col} row={tile.row} type={tile.type} connections={tile.connections} isConnected={tile.isConnected}
                     key={tile.row.toString() + '-' + tile.col.toString()}
                 />
