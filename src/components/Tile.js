@@ -12,12 +12,12 @@ class Tile extends React.Component {
     }
 
     render() {
-        const { type, connections, isConnected } = this.props;
-        let typeClass, element;
+        const { type, connections, isConnected, isLocked } = this.props;
+        let gridClass, svgElementClass, element;
 
         if (type === TileTypes.TERMINAL) {
             // 1 (_|_)
-            typeClass = `terminal-${connections}`;
+            svgElementClass = `terminal-${connections}`;
             element = (
                 <React.Fragment>
                     <line className="wire" x1="25" y1="0" x2="25" y2="25" />
@@ -25,7 +25,7 @@ class Tile extends React.Component {
                 </React.Fragment>
             );
         } else if (type === TileTypes.WIRE || type === TileTypes.SERVER) {
-            typeClass = `wire-${connections}`;
+            svgElementClass = `wire-${connections}`;
             if ([5, 10].includes(connections)) {
                 // 8 (--)
                 element = (<line className="wire" x1="25" y1="0" x2="25" y2="50" />);
@@ -65,12 +65,17 @@ class Tile extends React.Component {
             }
         }
         if (isConnected) {
-            typeClass += ' active';
+            svgElementClass += ' active';
+        }
+
+        gridClass = 'grid-item';
+        if (isLocked) {
+            gridClass += ' is-locked';
         }
 
         return (
-            <div className="grid-item" onClick={this.props.onClick} onContextMenu={this.props.onContextMenu}>
-                <svg width="50" height="50" className={typeClass}>
+            <div className={gridClass} onClick={this.props.onClick} onContextMenu={this.props.onContextMenu}>
+                <svg width="50" height="50" className={svgElementClass}>
                     {element}
                 </svg>
             </div>

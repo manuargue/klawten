@@ -4,7 +4,7 @@
   height: 50px;
 }
 
-.grid-item:hover {
+.grid-item:hover:not(.is-locked) {
   outline: 3px solid #749ec2;
   outline-offset: -2px;
   z-index: 100;

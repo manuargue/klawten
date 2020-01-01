@@ -11,17 +11,20 @@ class TileObject {
     row = 0;
     col = 0;
     type = null;
+    isLocked = false;
 
     constructor(row, col) {
         this.row = row;
         this.col = col;
         this.type = TileTypes.WIRE;
         this.connections = 0;
+        this.isLocked = false;
     }
 
     reset() {
         this.type = TileTypes.WIRE;
         this.connections = 0;
+        this.isLocked = false;
     }
 
     get isConnected() {
@@ -88,6 +91,9 @@ class TileObject {
     }
 
     rotateCW() {
+        if (this.isLocked)
+            return;
+
         let newConnections = this.connections << 1;
         if (newConnections > 15)
             newConnections -= 15;
@@ -95,6 +101,9 @@ class TileObject {
     }
 
     rotateCCW() {
+        if (this.isLocked)
+            return;
+
         let newConnections = this.connections >> 1;
         if (this.connections & UP)
             newConnections += LEFT;
@@ -107,7 +116,8 @@ class TileObject {
             row: this.row,
             type: this.type,
             connections: this.connections,
-            isConnected: this.isConnected
+            isConnected: this.isConnected,
+            isLocked: this.isLocked
         };
     }
 
@@ -233,10 +243,15 @@ class Maze extends React.Component {
             }
         }
 
+        const isSolved = visitedTiles.size === tiles.length;
+        if (isSolved) {
+            tiles.forEach(tile => { tile.isLocked = true });
+        }
+
         this.setState({
             tiles: tiles,
             rootTile: rootTile,
-            isSolved: visitedTiles.size === tiles.length
+            isSolved: isSolved
         });
     }
 
