@@ -1,12 +1,11 @@
 import React from 'react';
-import Maze from './components/Maze';
+import Game from './components/Game';
 import './App.scss';
 
 function App() {
   return (
     <div className="App">
-      <h1>Welcome to Klawten!</h1>
-      <Maze />
+      <Game />
     </div>
   );
 }

@@ -136,7 +136,7 @@ class Maze extends React.Component {
             cols: 5,
             tiles: [],
             rootTile: null,
-            isSolved: false
+            solvedConnections: 0,
         };
 
         this.generateTiles = this.generateTiles.bind(this);
@@ -144,6 +144,7 @@ class Maze extends React.Component {
         this.updateConnectionStates = this.updateConnectionStates.bind(this);
         this.randomizeTree = this.randomizeTree.bind(this);
         this.handleClick = this.handleClick.bind(this);
+        this.handleScore = this.handleScore.bind(this);
 
         this.generateTiles();
         this.generateNetwork();
@@ -243,16 +244,16 @@ class Maze extends React.Component {
             }
         }
 
-        const isSolved = visitedTiles.size === tiles.length;
-        if (isSolved) {
+        /** lock all tiles when solved */
+        if (visitedTiles.size === tiles.length) {
             tiles.forEach(tile => { tile.isLocked = true });
         }
 
         this.setState({
             tiles: tiles,
             rootTile: rootTile,
-            isSolved: isSolved
-        });
+            solvedConnections: visitedTiles.size
+        }, this.handleScore);
     }
 
     randomizeTree() {
@@ -274,6 +275,11 @@ class Maze extends React.Component {
         direction === 'cw' ? tile.rotateCW() : tile.rotateCCW();
         this.setState({ tiles: tiles });
         this.updateConnectionStates();
+    }
+
+    handleScore() {
+        const totalConnections = this.state.tiles.length;
+        this.props.handleScore(this.state.solvedConnections, totalConnections);
     }
 
     render() {
