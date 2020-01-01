@@ -1,5 +1,4 @@
 import { Directions, TileTypes, UP, DOWN, LEFT, RIGHT } from '../utils/constants';
-import Tile from '../components/Tile';
 
 
 class TileModel {

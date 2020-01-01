@@ -16,6 +16,7 @@ class Maze extends React.Component {
             tiles: [],
             rootTile: null,
             solvedConnections: 0,
+            isLocked: false
         };
 
         this.generateGrid = this.generateGrid.bind(this);
@@ -154,7 +155,11 @@ class Maze extends React.Component {
     }
 
     handleClick(e, tile, direction) {
+        const { isLocked } = this.state;
         e.preventDefault();
+
+        if (isLocked)
+            return;
 
         let tiles = [...this.state.tiles];
         direction === 'cw' ? tile.rotateCW() : tile.rotateCCW();
@@ -168,10 +173,25 @@ class Maze extends React.Component {
     }
 
     handleKeyDown(e) {
-        const { cols, rows } = this.state;
+        const { cols, rows, isLocked } = this.state;
         let newCols, newRows;
 
-        if (e.key === 'C' && cols < GridLimits.cols.max) {
+        if (e.key === 'h') {
+            this.setState({ isLocked: !isLocked });
+            this.props.onHelp();
+        }
+
+        if (isLocked)
+            return;
+
+        if (e.key === 'd') {
+            this.setState({
+                cols: GridLimits.cols.min,
+                rows: GridLimits.rows.min
+            },
+                this.generateNetwork
+            );
+        } else if (e.key === 'C' && cols < GridLimits.cols.max) {
             newCols = cols + 1;
             this.setState({ cols: newCols }, this.generateNetwork);
         } else if (e.key === 'c' && cols > GridLimits.cols.min) {
@@ -185,8 +205,6 @@ class Maze extends React.Component {
             this.setState({ rows: newRows }, this.generateNetwork);
         } else if (e.key === ' ') {
             this.generateNetwork();
-        } else if (e.key.toLowerCase() === 'h') {
-            // show help
         }
     }
 
