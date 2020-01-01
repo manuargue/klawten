@@ -1,7 +1,7 @@
 import React from 'react';
 import Tile from './Tile';
-import { Directions, TileTypes, UP, DOWN, LEFT, RIGHT } from './constants';
-import { shuffleArray } from './utils';
+import { Directions, TileTypes, UP, DOWN, LEFT, RIGHT } from '../utils/constants';
+import { shuffleArray, popFromSet } from '../utils/utils';
 import './Maze.scss';
 
 
@@ -215,14 +215,6 @@ class Maze extends React.Component {
 
         tiles.forEach(tile => { tile.isConnected = false });
         toVisitTiles.add(rootTile);
-
-        // helper function
-        let popFromSet = (set) => {
-            let value;
-            for (value of set);
-            set.delete(value);
-            return value;
-        };
 
         let activeTile = null;
         while (toVisitTiles.size > 0) {

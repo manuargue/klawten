@@ -1,5 +1,5 @@
 import React from 'react';
-import { TileTypes } from './constants';
+import { TileTypes } from '../utils/constants';
 import './Tile.scss';
 
 class Tile extends React.Component {

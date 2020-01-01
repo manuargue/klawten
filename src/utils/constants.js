@@ -11,4 +11,11 @@ const LEFT = 8;
 
 const Directions = [UP, RIGHT, DOWN, LEFT];
 
-module.exports = { TileTypes, Directions, UP, RIGHT, DOWN, LEFT };
+module.exports = {
+    TileTypes,
+    Directions,
+    UP,
+    RIGHT,
+    DOWN,
+    LEFT
+};
