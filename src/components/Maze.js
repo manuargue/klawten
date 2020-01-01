@@ -1,7 +1,7 @@
 import React from 'react';
 import Tile from './Tile';
 import TileModel from '../models/TileModel';
-import { Directions, TileTypes } from '../utils/constants';
+import { Directions, TileTypes, GridLimits } from '../utils/constants';
 import { shuffleArray, popFromSet } from '../utils/utils';
 import './Maze.scss';
 
@@ -11,46 +11,57 @@ class Maze extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            rows: 5,
-            cols: 5,
+            rows: GridLimits.rows.min,
+            cols: GridLimits.cols.min,
             tiles: [],
             rootTile: null,
             solvedConnections: 0,
         };
 
-        this.generateTiles = this.generateTiles.bind(this);
+        this.generateGrid = this.generateGrid.bind(this);
         this.generateNetwork = this.generateNetwork.bind(this);
         this.updateConnectionStates = this.updateConnectionStates.bind(this);
-        this.randomizeTree = this.randomizeTree.bind(this);
+        this.randomizeTiles = this.randomizeTiles.bind(this);
         this.handleClick = this.handleClick.bind(this);
         this.handleScore = this.handleScore.bind(this);
+        this.handleKeyDown = this.handleKeyDown.bind(this);
 
-        this.generateTiles();
-        this.generateNetwork();
+        // listen to key events
+        window.addEventListener('keydown', this.handleKeyDown);
     }
 
     componentDidMount() {
-        this.randomizeTree();
-        this.updateConnectionStates();
+        this.generateNetwork();
     }
 
     /** generates empty grid */
-    generateTiles() {
-        const { rows, cols } = this.state;
+    generateGrid(rows, cols) {
         const tiles = [];
         for (let row = 0; row < rows; row++) {
             for (let col = 0; col < cols; col++) {
                 tiles.push(new TileModel(row, col));
             }
         }
-        this.state.tiles = tiles;
+        return tiles;
+    }
+
+    /** rotate tiles randomly */
+    randomizeTiles(tiles) {
+        tiles.forEach((tile) => {
+            let i = Math.floor(Math.random() * 10) + 1;
+            while (i--) {
+                const turns = Math.floor(Math.random() * 100);
+                turns % 2 ? tile.rotateCW() : tile.rotateCCW();
+            }
+        });
+        return tiles;
     }
 
     /** generate network */
     generateNetwork() {
-        // reset current tiles
-        let tiles = this.state.tiles;
-        tiles.forEach(tile => tile.reset());
+        const { rows, cols } = this.state;
+
+        let tiles = this.generateGrid(rows, cols);
 
         // get random tile and make it the server
         let rootTile = tiles[Math.floor(Math.random() * tiles.length)];
@@ -88,10 +99,17 @@ class Maze extends React.Component {
                 break;
             }
         }
+
+        tiles = this.randomizeTiles(tiles);
         tiles.forEach(tile => tile.updateType());
 
-        this.state.tiles = tiles;
-        this.state.rootTile = rootTile;
+        this.setState(
+            {
+                tiles: tiles,
+                rootTile: rootTile
+            },
+            this.updateConnectionStates
+        );
     }
 
     updateConnectionStates() {
@@ -135,18 +153,6 @@ class Maze extends React.Component {
         }, this.handleScore);
     }
 
-    randomizeTree() {
-        let tiles = [...this.state.tiles];
-        tiles.forEach((tile) => {
-            let i = Math.floor(Math.random() * 10) + 1;
-            while (i--) {
-                const turns = Math.floor(Math.random() * 100);
-                turns % 2 ? tile.rotateCW() : tile.rotateCCW();
-            }
-        });
-        this.setState({ tiles: tiles });
-    }
-
     handleClick(e, tile, direction) {
         e.preventDefault();
 
@@ -159,6 +165,29 @@ class Maze extends React.Component {
     handleScore() {
         const totalConnections = this.state.tiles.length;
         this.props.handleScore(this.state.solvedConnections, totalConnections);
+    }
+
+    handleKeyDown(e) {
+        const { cols, rows } = this.state;
+        let newCols, newRows;
+
+        if (e.key === 'C' && cols < GridLimits.cols.max) {
+            newCols = cols + 1;
+            this.setState({ cols: newCols }, this.generateNetwork);
+        } else if (e.key === 'c' && cols > GridLimits.cols.min) {
+            newCols = cols - 1;
+            this.setState({ cols: newCols }, this.generateNetwork);
+        } else if (e.key === 'R' && rows < GridLimits.rows.max) {
+            newRows = rows + 1;
+            this.setState({ rows: newRows }, this.generateNetwork);
+        } else if (e.key === 'r' && rows > GridLimits.rows.min) {
+            newRows = rows - 1;
+            this.setState({ rows: newRows }, this.generateNetwork);
+        } else if (e.key === ' ') {
+            this.generateNetwork();
+        } else if (e.key.toLowerCase() === 'h') {
+            // show help
+        }
     }
 
     render() {

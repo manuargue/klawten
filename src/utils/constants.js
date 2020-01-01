@@ -11,11 +11,23 @@ const LEFT = 8;
 
 const Directions = [UP, RIGHT, DOWN, LEFT];
 
+const GridLimits = {
+    cols: {
+        min: 5,
+        max: 20
+    },
+    rows: {
+        min: 5,
+        max: 20
+    }
+};
+
 module.exports = {
     TileTypes,
     Directions,
     UP,
     RIGHT,
     DOWN,
-    LEFT
+    LEFT,
+    GridLimits
 };
