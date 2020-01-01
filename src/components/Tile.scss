@@ -1,100 +1,111 @@
 .grid-item {
-    outline: 1px solid #acb5bda1;
-    width: 50px;
-    height: 50px;
+  outline: 1px solid #acb5bda1;
+  width: 50px;
+  height: 50px;
+}
+
+.grid-item:hover {
+  outline: 3px solid #749ec2;
+  outline-offset: -2px;
+  z-index: 100;
 }
 
 rect.server {
-    fill: #005ca6;
-    stroke-width: 0px;
+  fill: #005ca6;
+  stroke-width: 0px;
 }
 
 rect.terminal {
-    fill: #414e5a;
-    stroke-width: 0px;
+  fill: #414e5a;
+  stroke-width: 0px;
 }
 
 line.wire {
-    stroke: #627685;
-    stroke-width: 8px;
-    stroke-linecap: round;
+  stroke: #627685;
+  stroke-width: 8px;
+  stroke-linecap: round;
 }
 
 .active {
-    line {
-        stroke: rgb(0, 187, 130);
-    }
+  
+  .wire {
+    stroke: rgb(0, 187, 130);
+  }
+
+  .terminal{
+    fill: rgb(14, 114, 84);
+  }
 }
 
 .terminal-1 {
-    /* default */
+  /* default */
 }
 
 .terminal-2 {
-    transform: rotate(90deg);
-    transform-origin: center;
+  transform: rotate(90deg);
+  transform-origin: center;
 }
 
 .terminal-4 {
-    transform: rotate(180deg);
-    transform-origin: center;
+  transform: rotate(180deg);
+  transform-origin: center;
 }
 
 .terminal-8 {
-    transform: rotate(-90deg);
-    transform-origin: center;
+  transform: rotate(-90deg);
+  transform-origin: center;
 }
 
 /* single pipes ----------------------- */
 .wire-5 {
-    /* default */
+  /* default */
 }
 
 .wire-10 {
-    transform: rotate(90deg);
-    transform-origin: center;
+  transform: rotate(90deg);
+  transform-origin: center;
 }
 
 .wire-7 {
-    /* default */
+  /* default */
 }
 
 .wire-11 {
-    transform: rotate(-90deg);
-    transform-origin: center;
+  transform: rotate(-90deg);
+  transform-origin: center;
 }
 
 .wire-13 {
-    transform: rotate(180deg);
-    transform-origin: center;
+  transform: rotate(180deg);
+  transform-origin: center;
 }
 
 .wire-14 {
-    transform: rotate(90deg);
-    transform-origin: center;
+  transform: rotate(90deg);
+  transform-origin: center;
 }
 
 /* elbow pipes ----------------------- */
 .wire-3 {
-    /* default */
+  /* default */
 }
 
 .wire-6 {
-    transform: rotate(90deg);
-    transform-origin: center;
+  transform: rotate(90deg);
+  transform-origin: center;
 }
 
 .wire-9 {
-    transform: rotate(-90deg);
-    transform-origin: center;    
+  transform: rotate(-90deg);
+  transform-origin: center;
 }
 
 .wire-12 {
-    transform: rotate(180deg);
-    transform-origin: center;
+  transform: rotate(180deg);
+  transform-origin: center;
 }
 
 /* cross pipes ----------------------- */
 .wire-15 {
-    /* default */
+  /* default */
 }

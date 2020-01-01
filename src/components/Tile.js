@@ -28,29 +28,29 @@ class Tile extends React.Component {
             typeClass = `wire-${connections}`;
             if ([5, 10].includes(connections)) {
                 // 8 (--)
-                element = (<line className="wire" x1="25" y1="0" x2="25" y2="50"/>);
+                element = (<line className="wire" x1="25" y1="0" x2="25" y2="50" />);
             } else if ([7, 11, 13, 14].includes(connections)) {
                 // 7 (|-)
                 element = (
                     <React.Fragment>
-                        <line className="wire" x1="25" y1="0" x2="25" y2="50"/>
-                        <line className="wire" x1="25" y1="25" x2="50" y2="25"/>
+                        <line className="wire" x1="25" y1="0" x2="25" y2="50" />
+                        <line className="wire" x1="25" y1="25" x2="50" y2="25" />
                     </React.Fragment>
                 );
             } else if ([3, 6, 9, 12].includes(connections)) {
                 // 3 (|_)
                 element = (
                     <React.Fragment>
-                        <line className="wire" x1="25" y1="0" x2="25" y2="25"/>
-                        <line className="wire" x1="25" y1="25" x2="50" y2="25"/>
+                        <line className="wire" x1="25" y1="0" x2="25" y2="25" />
+                        <line className="wire" x1="25" y1="25" x2="50" y2="25" />
                     </React.Fragment>
                 );
             } else {
                 // 15 (+)
                 element = (
                     <React.Fragment>
-                        <line className="wire" x1="25" y1="0" x2="25" y2="50"/>
-                        <line className="wire" x1="0" y1="25" x2="50" y2="25"/>
+                        <line className="wire" x1="25" y1="0" x2="25" y2="50" />
+                        <line className="wire" x1="0" y1="25" x2="50" y2="25" />
                     </React.Fragment>
                 );
             }

@@ -88,7 +88,6 @@ class TileObject {
     }
 
     rotateCW() {
-        console.log('cw');
         let newConnections = this.connections << 1;
         if (newConnections > 15)
             newConnections -= 15;
@@ -96,11 +95,24 @@ class TileObject {
     }
 
     rotateCCW() {
-        console.log('ccw');
         let newConnections = this.connections >> 1;
         if (this.connections & UP)
             newConnections += LEFT;
         this.connections = newConnections;
+    }
+
+    toProps() {
+        return {
+            col: this.col,
+            row: this.row,
+            type: this.type,
+            connections: this.connections,
+            isConnected: this.isConnected
+        };
+    }
+
+    getKey() {
+        return `${this.row}-${this.col}`;
     }
 }
 
@@ -110,8 +122,8 @@ class Maze extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            rows: 10,
-            cols: 10,
+            rows: 5,
+            cols: 5,
             tiles: [],
             rootTile: null,
             isSolved: false
@@ -239,11 +251,11 @@ class Maze extends React.Component {
     randomizeTree() {
         let tiles = [...this.state.tiles];
         tiles.forEach((tile) => {
-            // let turnFunctions = [tile.rotateCW, tile.rotateCCW];
-            // let movement = turnFunctions[Math.floor(Math.random() * turnFunctions.length)]();
-            // movement();
-            // TODO: fix
-            tile.rotateCW();
+            let i = Math.floor(Math.random() * 10) + 1;
+            while (i--) {
+                const turns = Math.floor(Math.random() * 100);
+                turns % 2 ? tile.rotateCW() : tile.rotateCCW();
+            }
         });
         this.setState({ tiles: tiles });
     }
@@ -258,18 +270,28 @@ class Maze extends React.Component {
     }
 
     render() {
+        const { rows, cols } = this.state;
+
         const tilesItems = this.state.tiles.map((tile) => {
             return (
-                <Tile onClick={(e) => {this.handleClick(e, tile, 'cw');}} onContextMenu={(e) => {this.handleClick(e, tile, 'ccw');}}
-                    col={tile.col} row={tile.row} type={tile.type} connections={tile.connections} isConnected={tile.isConnected}
-                    key={tile.row.toString() + '-' + tile.col.toString()}
+                <Tile {...tile.toProps()}
+                    onClick={(e) => { this.handleClick(e, tile, 'cw'); }}
+                    onContextMenu={(e) => { this.handleClick(e, tile, 'ccw'); }}
+                    key={tile.getKey()}
                 />
             )
         });
 
+        const gridStyle = {
+            width: cols * 50,
+            height: rows * 50
+        };
+
         return (
-            <div className="grid-container">
-                <div className="grid">{tilesItems}</div>
+            <div className="grid-container disable-selection">
+                <div className="grid" style={gridStyle}>
+                    {tilesItems}
+                </div>
             </div>
         );
     }
