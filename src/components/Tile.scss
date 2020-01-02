@@ -1,3 +1,7 @@
+$wire: #627685;
+$wire-active-light: rgb(3, 201, 141);
+$wire-active-dark: rgb(0, 187, 130);
+
 .grid-item {
   outline: 1px solid #acb5bda1;
   width: 50px;
@@ -21,18 +25,25 @@ rect.terminal {
 }
 
 line.wire {
-  stroke: #627685;
+  stroke: $wire;
   stroke-width: 8px;
   stroke-linecap: round;
 }
 
+.stop-active-light {
+  stop-color: $wire-active-light;
+}
+
+.stop-active-dark {
+  stop-color: $wire-active-dark;
+}
+
 .active {
-  
   .wire {
-    stroke: rgb(0, 187, 130);
+    stroke: url(#radial-gradient-active);
   }
 
-  .terminal{
+  .terminal {
     fill: rgb(14, 114, 84);
   }
 }

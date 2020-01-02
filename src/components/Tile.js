@@ -73,9 +73,20 @@ class Tile extends React.Component {
             gridClass += ' is-locked';
         }
 
+        const svgGradient = (
+            <defs>
+                <radialGradient id="radial-gradient-active" cx="50%" cy="50%" r="50%" gradientUnits="userSpaceOnUse">
+                    <stop className="stop-active-light" offset="30%" />
+                    <stop className="stop-active-dark" offset="80%" />
+                    <animate attributeName="r" dur="3000ms" repeatCount="indefinite" values="30%; 60%; 50%; 60%; 30%;" />
+                </radialGradient>
+            </defs>
+        );
+
         return (
             <div className={gridClass} onClick={this.props.onClick} onContextMenu={this.props.onContextMenu}>
                 <svg width="50" height="50" className={svgElementClass}>
+                    {isConnected && svgGradient}
                     {element}
                 </svg>
             </div>
