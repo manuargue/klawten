@@ -214,8 +214,8 @@ class Maze extends React.Component {
         const tilesItems = this.state.tiles.map((tile) => {
             return (
                 <Tile {...tile.toProps()}
-                    onClick={(e) => { this.handleClick(e, tile, 'cw'); }}
-                    onContextMenu={(e) => { this.handleClick(e, tile, 'ccw'); }}
+                    onClick={(e) => { this.handleClick(e, tile, 'ccw'); }}
+                    onContextMenu={(e) => { this.handleClick(e, tile, 'cw'); }}
                     key={tile.getKey()}
                 />
             )
