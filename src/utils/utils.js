@@ -15,7 +15,4 @@ function popFromSet(set) {
     return value;
 };
 
-module.exports = {
-    shuffleArray,
-    popFromSet
-};
+export { shuffleArray, popFromSet };
