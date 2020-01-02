@@ -1,0 +1,29 @@
+#maze-size {
+  position: absolute;
+  top: 0;
+  z-index: 1000;
+  background: rgba(18, 51, 85, 0.493);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  h1 {
+    color: #d3e2d5;
+    font-size: 5em;
+  }
+}
+
+.maze-size-shown {
+  opacity: 1;
+  overflow: visible;
+  visibility: visible;
+}
+
+.maze-size-hidden {
+  opacity: 0;
+  transition: all 200ms linear;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  visibility: hidden;
+}

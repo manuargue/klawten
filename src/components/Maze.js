@@ -1,5 +1,6 @@
 import React from 'react';
 import Tile from './Tile';
+import MazeSizeOverlay from './MazeSizeOverlay';
 import TileModel from '../models/TileModel';
 import { Directions, TileTypes, GridLimits } from '../utils/constants';
 import { shuffleArray, popFromSet } from '../utils/utils';
@@ -16,7 +17,8 @@ class Maze extends React.Component {
             tiles: [],
             rootTile: null,
             solvedConnections: 0,
-            isLocked: false
+            isLocked: false,
+            isShowingMazeSize: false,
         };
 
         this.generateGrid = this.generateGrid.bind(this);
@@ -107,10 +109,17 @@ class Maze extends React.Component {
         this.setState(
             {
                 tiles: tiles,
-                rootTile: rootTile
+                rootTile: rootTile,
+                isShowingMazeSize: true
             },
             this.updateConnectionStates
         );
+
+        setTimeout(() => {
+            this.setState({
+                isShowingMazeSize: false
+            });
+        }, 150);
     }
 
     updateConnectionStates() {
@@ -209,7 +218,7 @@ class Maze extends React.Component {
     }
 
     render() {
-        const { rows, cols } = this.state;
+        const { rows, cols, isShowingMazeSize } = this.state;
 
         const tilesItems = this.state.tiles.map((tile) => {
             return (
@@ -228,6 +237,7 @@ class Maze extends React.Component {
 
         return (
             <div className="grid-container disable-selection">
+                <MazeSizeOverlay rows={rows} cols={cols} isShowing={isShowingMazeSize} />
                 <div className="grid" style={gridStyle}>
                     {tilesItems}
                 </div>
