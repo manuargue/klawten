@@ -12,12 +12,11 @@ class Tile extends React.Component {
     }
 
     render() {
-        const { type, connections, isConnected, isLocked } = this.props;
+        const { type, connections, isConnected, isLocked, angle } = this.props;
         let gridClass, svgElementClass, element;
 
         if (type === TileTypes.TERMINAL) {
             // 1 (_|_)
-            svgElementClass = `terminal-${connections}`;
             element = (
                 <React.Fragment>
                     <line className="wire" x1="25" y1="0" x2="25" y2="25" />
@@ -25,9 +24,8 @@ class Tile extends React.Component {
                 </React.Fragment>
             );
         } else if (type === TileTypes.WIRE || type === TileTypes.SERVER) {
-            svgElementClass = `wire-${connections}`;
             if ([5, 10].includes(connections)) {
-                // 8 (--)
+                // 5 (|)
                 element = (<line className="wire" x1="25" y1="0" x2="25" y2="50" />);
             } else if ([7, 11, 13, 14].includes(connections)) {
                 // 7 (|-)
@@ -73,6 +71,8 @@ class Tile extends React.Component {
             gridClass += ' is-locked';
         }
 
+        const svgStyle = { transform: `rotate(${angle}deg)` };
+
         const svgGradient = (
             <defs>
                 <radialGradient id="radial-gradient-active" cx="50%" cy="50%" r="50%" gradientUnits="userSpaceOnUse">
@@ -85,7 +85,7 @@ class Tile extends React.Component {
 
         return (
             <div className={gridClass} onClick={this.props.onClick} onContextMenu={this.props.onContextMenu}>
-                <svg width="50" height="50" className={svgElementClass}>
+                <svg width="50" height="50" className={svgElementClass} style={svgStyle}>
                     {isConnected && svgGradient}
                     {element}
                 </svg>

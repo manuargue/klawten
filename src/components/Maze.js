@@ -51,7 +51,7 @@ class Maze extends React.Component {
     /** rotate tiles randomly */
     randomizeTiles(tiles) {
         tiles.forEach((tile) => {
-            let i = Math.floor(Math.random() * 10) + 1;
+            let i = Math.floor(Math.random() * 10) + 5;
             while (i--) {
                 const turns = Math.floor(Math.random() * 100);
                 turns % 2 ? tile.rotateCW() : tile.rotateCCW();
@@ -65,6 +65,7 @@ class Maze extends React.Component {
         const { rows, cols } = this.state;
 
         let tiles = this.generateGrid(rows, cols);
+        tiles.forEach(tile => tile.reset());
 
         // get random tile and make it the server
         let rootTile = tiles[Math.floor(Math.random() * tiles.length)];
@@ -103,8 +104,8 @@ class Maze extends React.Component {
             }
         }
 
-        tiles = this.randomizeTiles(tiles);
         tiles.forEach(tile => tile.updateType());
+        tiles = this.randomizeTiles(tiles);
 
         this.setState(
             {

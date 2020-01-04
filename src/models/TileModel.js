@@ -4,6 +4,7 @@ import { Directions, TileTypes, UP, DOWN, LEFT, RIGHT } from '../utils/constants
 class TileModel {
 
     connections = 0;
+    angle = 0;
     row = 0;
     col = 0;
     type = null;
@@ -14,12 +15,14 @@ class TileModel {
         this.col = col;
         this.type = TileTypes.WIRE;
         this.connections = 0;
+        this.angle = 0;
         this.isLocked = false;
     }
 
     reset() {
         this.type = TileTypes.WIRE;
         this.connections = 0;
+        this.angle = 0;
         this.isLocked = false;
     }
 
@@ -84,6 +87,7 @@ class TileModel {
         if (this.type !== TileTypes.SERVER && Directions.includes(this.connections)) {
             this.type = TileTypes.TERMINAL;
         }
+        this.angle = this.calculateInitialAngle();
     }
 
     rotateCW() {
@@ -94,6 +98,7 @@ class TileModel {
         if (newConnections > 15)
             newConnections -= 15;
         this.connections = newConnections;
+        this.angle += 90;
     }
 
     rotateCCW() {
@@ -104,6 +109,7 @@ class TileModel {
         if (this.connections & UP)
             newConnections += LEFT;
         this.connections = newConnections;
+        this.angle -= 90;
     }
 
     toProps() {
@@ -113,8 +119,23 @@ class TileModel {
             type: this.type,
             connections: this.connections,
             isConnected: this.isConnected,
-            isLocked: this.isLocked
+            isLocked: this.isLocked,
+            angle: this.angle
         };
+    }
+
+    calculateInitialAngle() {
+        let angle = 0;
+        if ([1, 3, 5, 7].includes(this.connections)) {
+            angle = 0;
+        } else if ([2, 6, 10, 14].includes(this.connections)) {
+            angle = 90;
+        } else if ([4, 12, 13].includes(this.connections)) {
+            angle = 180;
+        } else if ([8, 11, 9].includes(this.connections)) {
+            angle = -90;
+        }
+        return angle;
     }
 
     getKey() {
