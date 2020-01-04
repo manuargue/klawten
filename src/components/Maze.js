@@ -19,6 +19,7 @@ class Maze extends React.Component {
             solvedConnections: 0,
             isLocked: false,
             isShowingMazeSize: false,
+            isShaking: false,
         };
 
         this.generateGrid = this.generateGrid.bind(this);
@@ -111,7 +112,8 @@ class Maze extends React.Component {
             {
                 tiles: tiles,
                 rootTile: rootTile,
-                isShowingMazeSize: true
+                isShowingMazeSize: true,
+                isShaking: true
             },
             this.updateConnectionStates
         );
@@ -121,6 +123,12 @@ class Maze extends React.Component {
                 isShowingMazeSize: false
             });
         }, 150);
+
+        setTimeout(() => {
+            this.setState({
+                isShaking: false
+            });
+        }, 1000);
     }
 
     updateConnectionStates() {
@@ -219,13 +227,14 @@ class Maze extends React.Component {
     }
 
     render() {
-        const { rows, cols, isShowingMazeSize } = this.state;
+        const { rows, cols, isShowingMazeSize, isShaking } = this.state;
 
         const tilesItems = this.state.tiles.map((tile) => {
             return (
                 <Tile {...tile.toProps()}
                     onClick={(e) => { this.handleClick(e, tile, 'ccw'); }}
                     onContextMenu={(e) => { this.handleClick(e, tile, 'cw'); }}
+                    isShaking={isShaking}
                     key={tile.getKey()}
                 />
             )
