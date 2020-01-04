@@ -44,6 +44,9 @@ class Tile extends React.Component {
                         <line className="wire" x1="25" y1="25" x2="50" y2="25" />
                     </React.Fragment>
                 );
+            } else if ([1, 2, 4, 8].includes(connections)) {
+                // 1 (')
+                element = <line className="wire" x1="25" y1="0" x2="25" y2="25" />;
             } else {
                 // 15 (+)
                 element = (
